@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: mainLayout(title = 'Sign | Up', main = ~{:: main})}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<main>
+			<div class="mx-auto " style="width: 600px; ">
+				<h4 class="m-auto">Sign Up Form</h4>
+				
+					<form th:action="@{signUp}" method="post" th:object="${form}" class="mt-4">
+						
+						<input th:field="*{id}" type="hidden" />
+						
+						<div class="mb-4">
+							<label for="name" class="form-label">Name</label>
+							<input th:field="*{name}" type="text" class="form-control" placeholder="please enter your name..." />
+								<span class="text-danger" th:errors="*{name}"></span>
+						</div>
+						
+						<div class="row mb-4">
+							<div class="col">
+								<label for="email" class="form-label">Email</label>
+								<input th:field="*{email}" type="email" class="form-control" placeholder="please enter emaill address..."/>
+								<span class="text-danger" th:errors="*{email}"></span>
+							</div>
+							<div class="col">
+								<label for="phone" class="form-label">Phone</label>
+								<input th:field="*{phone}" type="tel" class="form-control" placeholder="please enter phone..." />
+								<span class="text-danger" th:errors="*{phone}"></span>
+							</div>
+						</div>
+						
+						<div class="mb-4">
+							<label for="password" class="form-label">Password</label>
+							<input th:field="*{password}" type="password" class="form-control" placeholder="please enter password..." />
+							<span class="text-danger w-50" th:errors="*{password}"></span>
+						</div>
+						
+						<div class="mb-4">
+							<button type="submit" class="btn btn-success">Sign Up</button>
+							<a th:href="@{login}" class="btn btn-danger">Login</a>
+						</div>
+					</form>
+				</div>
+	</main>
+
+</body>
+</html>

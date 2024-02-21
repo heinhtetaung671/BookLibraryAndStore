@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: mainLayout(title = 'Add New Account', main = ~{:: main})}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<main>	
+			<div class="mx-auto " style="width: 600px;">
+				<h4 class="m-auto">Register New Account</h4>
+				
+					<form th:action="@{/admin/addNewAccount}" method="post" th:object="${form}" class="mt-4">
+												
+						<div class="mb-3">
+							<label for="name" class="form-label">Name</label>
+							<input th:field="*{name}" type="text" class="form-control w-75" placeholder="please enter user's name..." />
+								<span class="text-danger" th:errors="*{name}"></span>
+						</div>
+						
+						<div class="row mb-3">
+							<div class="col">
+								<label for="email" class="form-label">Email</label>
+								<input th:field="*{email}" type="email" class="form-control" placeholder="please enter user's email address..."/>
+								<span class="text-danger" th:errors="*{email}"></span>
+							</div>
+							<div class="col">
+								<label for="phone" class="form-label">Phone</label>
+								<input th:field="*{phone}" type="tel" class="form-control" placeholder="please enter user's phone..." />
+								<span class="text-danger" th:errors="*{phone}"></span>
+							</div>
+						</div>
+						
+					<div class="mb-3 row">
+							<div class="col">
+								<label for="password" class="form-label">Password</label>
+								<input th:field="*{password}" type="password" class="form-control" placeholder="please enter user's password..." />
+								<span class="text-danger w-50" th:errors="*{password}"></span>
+							</div>
+							
+						<div class="col">
+							<label  class="form-label">Authority</label>
+							<select th:field="*{authority}" class="form-select">
+								<option th:each="a : ${authorities}" th:value="${a}" th:text="${a}"></option>
+							</select>
+							<span class="errorTag text-danger" th:errors="*{authority}"></span>
+						</div>
+					</div>
+					
+					<div class="row mb-3">
+						<div class="col">
+							<label for="" class="form-label">Balance</label>
+							<input th:field="*{balance}" type="number"  class="form-control" placeholder="please enter user's balance..."/>
+						<span class="errorTag text-danger" th:errors="*{balance}"></span>
+						</div>
+						<div class="col">
+							<label for="" class="form-label">Point</label>
+							<input th:field="*{point}" type="number" class="form-control" placeholder="please enter user's point..."/>
+						<span class="errorTag text-danger" th:errors="*{point}"></span>
+						</div>
+					</div>
+
+					<div class="row mb-3">
+						<div class="col">
+							<label for="" class="form-label">Status</label>
+							<select th:field="*{active}" class="form-select">
+								<option value="true">Active</option>
+								<option value="false">UnActive</option>
+							</select>
+						</div>
+						<div class="col">
+							<label for="" class="form-label">Lock</label>
+							<select th:field="*{locked}" class="form-select">
+								<option value="true">Lock</option>
+								<option value="false">UnLock</option>
+							</select>
+						</div>
+					</div>
+					
+					<div class="mb-3">
+						<label>Status Message</label>
+						<textarea th:field="*{statusMessage}" class="form-control" rows="3" cols="30" placeholder="enter account status message."></textarea>
+					</div>
+					
+					<div class="mb-3">
+						<button type="submit" class="btn btn-info">Save</button>
+					</div>
+				
+					</form>
+				</div>
+	</main>
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: mainLayout(title = 'Promotion | List', main = ~{:: main})}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<main>
+		
+		<h4>Promotion List</h4>
+	
+		<div class="row">
+			<div class="col">
+			
+				<div th:replace="~{fragments/components :: emptyMessage(${list}, 'Promotion')}"></div>
+			
+				<table th:if="${list.size() > 0}" class="table table-striped-columns">
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Name</th>
+							<th>Type</th>
+							<th>Discount Percent</th>
+							<th>Status</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="dto : ${list}" th:object="${dto}">
+							<td th:text="*{id}"></td>
+							<td th:text="*{name}"></td>
+							<td th:text="*{type}"></td>
+							<td th:text="*{disPercent}"></td>
+							<td th:text="*{active ? 'Available' : 'Not Available'}"></td>
+							<td>
+								<button th:attr="data-id=*{id}, data-name=*{name}, data-type=*{type}, data-dispercent=*{disPercent}, data-active=*{active}" class="editBtn bi-pencil btn btn-outline-primary"></button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-3">
+				<div class="card">
+					<div class="card-header">Search Form</div>
+					<div class="card-body">
+						<form th:action="@{/member/promotion}" th:object="${searchForm}">
+							<div class="mb-3">
+								<label class="form-label">Name</label>
+								<input id="searchName" th:field="*{searchName}" type="text" class="form-control" placeholder="Enter Name..." />
+							</div>
+							<div class="mb-3">
+								<label class="form-label">Type</label>
+								<select id="searchType" th:field="*{searchType}" class="form-select">
+									<option value="">Select Type</option>
+									<option th:each="t : ${types}" th:value="${t}" th:text="${t}"></option>
+								</select>
+							</div>
+							<div class="mb-3">
+								<label class="form-label">Discount Percent</label>
+								<input id="searchDisPercent" th:field="*{searchDisPercent}" type="number" class="form-control" placeholder="Enter Discount Percent..." />
+							</div>
+							<div class="mb-3">
+								<label class="form-label">Status</label>
+								<select id="searchStatus" th:field="*{searchActive}" class="form-select">
+									<option value="">All Status</option>
+									<option value="true">Available</option>
+									<option value="false">Not Available</option>
+								</select>
+							</div>
+							<div class="row mb-3">
+								<button type="submit" class="btn btn-outline-success mb-2">Search</button>
+								<button type="button" id="addNewBtn" class="btn btn-outline-danger">Add New Promotion</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div th:replace="~{fragments/promotion-edit-modal :: promotionEditModal}"></div>
+	</main>
+
+</body>
+</html>

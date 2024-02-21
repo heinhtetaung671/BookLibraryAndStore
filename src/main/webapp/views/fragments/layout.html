@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="mainLayout">
+<head>
+<meta charset="UTF-8">
+<title>[[${title}]]</title>
+<link rel="stylesheet" th:href="@{/resources/css/bootstrap.min.css}" />
+<script type="text/javascript" th:src="@{/resources/js/bootstrap.bundle.min.js}"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style type="text/css">
+	table {
+    border-collapse: separate;
+    border-spacing: 0.25rem;
+    }
+    table > td th{
+    	text-align: center;
+ 
+    }	
+</style>
+<link rel="stylesheet" th:href="@{/resources/myCss/common.css}" />
+</head>
+<body>
+
+	<nav th:replace="~{fragments/nav :: navBar}"></nav>
+
+	<main class="container-fluid mt-4" th:insert="${main}"></main>
+
+</body>
+</html>

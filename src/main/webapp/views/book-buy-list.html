@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: mainLayout(title = 'Buy | Book', main = ~{:: main})}" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<main>
+		<h3>Book Store</h3>
+
+		<h6 class="my-3">Your Balance <i class="bi bi-coin"></i>  : [[${balance}]]</h6>
+
+		<div>
+			<form id="searchForm" th:action="@{/public/book/buy}" >
+				<div class="row align-items-center my-3">
+					<input type="hidden" th:value="0" name="page" id="page" />
+					<input type="hidden" th:value="${param.pageSize}" name="pageSize" id="pageSize" />
+					<input type="hidden" th:value="${param.sortBy}" name="sortBy" id="sortBy" />
+					<input type="hidden" th:value="${#strings.isEmpty(param.direction) ? 'asc' : param.direction}" name="direction" id="direction" />
+					<div class="col-auto">
+						<label class="col-form-label">Search Bar</label>
+					</div>
+					<div class="col-3">				
+						<input th:value="${param.keyword}" type="text" name="keyword" class="form-control" placeholder="Enter a keyword..." />
+					</div>	
+					<div class="col-auto">
+						<label  class="col-form-label">Status</label>
+					</div>			
+					<div class="col-auto">
+						<div th:replace="~{fragments/components :: activeSelect}"></div>
+					</div>
+					<div class="col-auto">
+						<button type="submit" class="btn btn-outline-success">Search</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		
+		<hr />
+		
+		<div th:replace="~{fragments/components :: message(${message}, ${status})}"></div>
+		<div th:replace="~{fragments/components :: emptyMessage(${list}, 'Book')}"></div>
+
+		<div th:if="${list.size() >0}" class="row">
+			<div class="col-auto">
+				<label  class="col-form-label">SortBy</label>
+			</div>
+			<div class="col-auto">
+				<div th:replace="~{fragments/components :: sortBySelect(true)}"></div>
+			</div>
+			<div class="col-auto">
+				<div th:replace="~{fragments/components :: direction}"></div>
+			</div>
+		</div>
+		
+		<table th:if="${list.size() >0}" class="table table-striped">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Author</th>
+					<th>Quantity</th>
+					<th>Price</th>
+					<th>Status</th>
+					<th>Category</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="dto : ${list}" th:object="${dto}">
+					<td th:text="*{name}">Effective Java</td>
+					<td th:text="*{author}">Unknown</td>
+					<td th:text="*{qtyForSale}">7</td>
+					<td th:text="*{dtsPrice}">500</td>
+					<td th:text="*{active ? 'Available' : 'Not Available'}"></td>
+					<td th:text="*{category}">Programming</td>
+					<td>
+						<button sec:authorize="!hasAuthority('ADMIN')" th:unless="*{active}" disabled="disabled" class="btn btn-outline-secondary">Add To Cart</button>
+						<a sec:authorize="!hasAuthority('ADMIN')" th:if="*{active}" th:href="@{|/customer/book/*{id}/addToCart|}" class="btn btn-outline-warning">Add To Cart</a>
+						<a th:href="@{|/public/book/buy/*{id}/details|}" class="btn btn-outline-info">Details</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>		
+	
+		<div th:replace="~{fragments/book-details-modal :: bookDetailsModalDialog(${bookDetails}, true)}"></div>
+		<div th:replace="~{fragments/components :: pagination(${pagination})}"></div>
+	</main>
+
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: mainLayout(title = 'Book | List', main = ~{:: main})}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<main>
+		<h3>Book List</h3>
+		
+				
+			<div th:if="${list != null && list.size() > 0}">
+			
+				<div class="row">
+					<div class="col-auto">
+						<label  class="col-form-label">Sort By : </label>
+					</div>
+					<div class="col-auto">
+						<div th:replace="~{fragments/components :: sortBySelectBookForMember}"></div>
+					</div>
+					<div class="col-auto">
+					</div>
+				</div>
+			
+				<div th:replace="~{fragments/components :: message(${message}, ${status})}"></div>
+		
+			</div>
+		
+		<div class="row">
+			<div class="col">		
+
+			<div th:replace="~{fragments/components :: emptyMessage(${list}, 'Books')}"></div>
+				
+				<table th:if="${list.size() > 0}" class="table table-striped"  >
+						<thead>
+							<tr>
+								<th>Id</th>
+								<th>Name</th>
+								<th>Author</th>
+								<th>Whole Sale Price</th>
+								<th>Details Sale Price</th>
+								<th>One Day Borrow Price</th>
+								<th>Quantity for Sale</th>
+								<th>Quantity for Borrow</th>
+								<th>Status</th>
+								<th>Category</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="book : ${list}" th:object="${book}">
+								<td>[[*{id}]]</td>
+								<td>[[*{name}]]</td>
+								<td>[[*{author}]]</td>
+								<td>[[*{wsPrice}]]</td>
+								<td>[[*{dtsPrice}]]</td>
+								<td>[[*{bpdPrice}]]</td>
+								<td>[[*{qtyForSale}]]</td>
+								<td>[[*{qtyForBorrow}]]</td>
+								<td>[[*{active ? 'Available' : 'Not Available'}]]</td>
+								<td>[[*{category.name}]]</td>
+								<td>
+									<a th:href="@{/member/book/edit(bId=*{id})}" class="btn btn-outline-primary"><i class="bi-pencil"></i></a>
+								</td>
+							</tr>
+						</tbody>
+					</table>	
+					<div th:replace="~{fragments/components :: pagination(${pagination})}"></div>			
+				</div>
+			
+			<div class="col-3">
+				<div class="card">
+					<div class="mt-3 card-header d-flex">
+						<div class="justify-content-center">
+							<h5 class="me-3">Search Box</h5>
+						</div>
+					</div>
+					<div class="card-body">
+						<form id="searchForm" th:action="@{/member/book}" th:object="${searchForm}">
+							<input type="hidden" name="page" id="page" value="0" />
+							<input type="hidden" th:field="*{pageSize}" />
+							<input type="hidden" th:field="*{sortBy}" />
+							<div class="mb-4">
+								<label for="name" class="form-label">Name</label>
+								<input th:field="*{name}" type="text" class="form-control" placeholder="Enter a Name..." />
+							</div>
+		
+							<div class="mb-4">
+								<label for="author" class="form-label">Author</label>
+								<input th:field="*{author}" type="text" class="form-control" placeholder="Enter a Author..." />
+							</div>
+		
+							<div class="mb-4">
+								<label for="category" class="form-label">Category</label>
+								<select th:field="*{category}" class="form-select">
+									<option value="">All Category</option>
+									<option th:each="c : ${categories}" th:selected="${#strings.equals(param.category, c.id)}" th:text="${c.name}" th:value="${c.id}"></option>
+								</select>
+							</div>
+		
+							<div class="row mb-4">
+								<div class="col">
+									<label for="wsPrice" class="col-form-label">Ws Price</label>
+									<input th:field="*{wsPrice}" type="number" class="form-control" placeholder="Enter a WholeSalePrice..." />
+								</div>
+								<div class="col">
+									<label for="dtsPrice" class="col-form-label">Dts Price</label>
+									<input th:field="*{dtsPrice}" th:value="${param.dtsPrice}" name="dtsPrice" type="number" class="form-control" placeholder="Enter a DetailsSalePrice..." />
+								</div>
+								<div class="col">
+									<label for="bpdPrice" class="col-form-label">Bpd Price</label>
+									<input th:field="*{bpdPrice}" type="number" class="form-control" placeholder="Enter a BorrowPerDayPrice..." />
+								</div>
+							</div>
+		
+							<div class="mb-4">
+								<label for="active" class="form-label">Status</label>
+								<select th:field="*{active}" class="form-select">
+									<option value="">All Status</option>
+									<option th:selected="${#strings.equals(param.active, 'true')}" value="true">Available</option>
+									<option th:selected="${#strings.equals(param.active, 'false')}" value="false">Not Available</option>
+								</select>
+							</div>
+							
+							<div class="row mb-4">
+								<button type="submit" class="btn btn-outline-info mb-2">Search</button>
+								<a th:href="@{/member/book/edit}" class="btn btn-outline-success">Add New Book</a>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			</div>	
+	</main>
+
+</body>
+</html>

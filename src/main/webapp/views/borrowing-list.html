@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: mainLayout(title = 'Borrowing | List', main = ~{::main})}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<main>
+		<h4>Your currently borrowing books</h4>
+		
+		<h6 class="my-3">Your Balance : [[${balance}]]</h6>
+		
+		<h6 class="my-3">Total : [[${list.size()}]]</h6>		
+	
+		<div th:replace="~{fragments/components :: message(${message}, ${status})}"></div>
+		<div th:replace="~{fragments/components :: emptyMessage(${list}, 'Borrowing Book')}"></div>		
+				
+		<table th:if="${list.size() > 0}" class="table table-striped-columns mt-4">
+			<thead>
+				<tr>
+					<th>No</th>
+					<th>BorrowId</th>
+					<th>Title</th>
+					<th>Author</th>
+					<th>Category</th>
+					<th>Price Per Day</th>
+					<th>Borrowed Date</th>
+					<th>Duration Days</th>
+					<th>Cost For Now</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="dto, i : ${list}" th:object="${dto}">
+					<td th:text="${i.index + 1}"></td>
+					<td th:text="*{id}"></td>
+					<td th:text="*{bookName}"></td>
+					<td th:text="*{author}"></td>
+					<td th:text="*{categoryName}"></td>
+					<td th:text="*{bpdPrice}"></td>
+					<td th:text="*{@myDateTimeFormatter.format(borrowDate)}"></td>
+					<td th:text="*{@farDateCalculator.calculate(borrowDate)}"></td>
+					<td th:text="*{@farDateCalculator.calculate(borrowDate) * bpdPrice}"></td>
+					<td>
+						<button th:attr="data-id=*{id}" class="btn btn-outline-warning returnBtn">Return Book</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<!--  Confirm box -->		
+		<div id="confirmBoxModal" class="modal fade">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">Are You Sure?</div>
+					<div class="modal-body">
+						<p>Are you sure to return this book?</p>
+					</div>
+					<div class="modal-footer">
+						<a id="doReturnLink" th:href="@{|/customer/return/book/|}" class="btn btn-success">Yes</a>
+						<button id="closeBtn" class="btn btn-danger"><i class="bi-x"></i> No</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<script type="text/javascript" th:src="@{/resources/myJs/return-book-confirm-modal.js}"></script>
+	</main>
+
+</body>
+</html>

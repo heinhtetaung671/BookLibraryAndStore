@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: mainLayout(title = 'Category | List', main = ~{::main})}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<main>
+		<h3>Category List</h3>
+		
+		<form th:action="@{/member/category}" class="row w-50" th:object="${searchForm}">
+			<div class="col-auto">
+				<label for="name" class="col-form-label">Search Bar</label>
+			</div>
+			<div class="col-auto">
+				<input id="searchName" type="text" th:field="*{searchName}" class="form-control" placeholder="Enter Category name...." />
+			</div>
+			<div class="col-auto">
+				<button type="submit" class="btn btn-success">Search</button>
+				<button id="addNewBtn" type="button" class="btn btn-outline-primary">Add New Category</button>
+			</div>
+		</form>
+		
+		
+		<div th:replace="~{fragments/components :: emptyMessage(${list}, 'Category')}"></div>
+		
+		<table th:if="${list.size() > 0}" class="table table-striped">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Name</th>
+					<th>Status</th>
+					<th>Create At</th>
+					<th>Update At</th>
+					<th>Create By</th>
+					<th>Update By</th>
+					<th></th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				<tr th:each="dto : ${list}" th:object="${dto}">
+					<td>[[*{id}]]</td>
+					<td>[[*{name}]]</td>
+					<td>[[*{active ? 'Available' : 'Not Available'}]]</td>
+					<td>[[*{@myDateTimeFormatter.format(createAt)}]]</td>
+					<td>[[*{@myDateTimeFormatter.format(updateAt)}]]</td>
+					<td>[[*{createBy}]]</td>
+					<td>[[*{updateBy}]]</td>
+					<td>
+						<button type="button"  th:attr="data-id=*{id}, data-name=*{name}, data-active=*{active}" class="bi-pencil btn btn-outline-primary editBtn"></button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<div th:replace="~{fragments/category-components :: categoryDialog}"></div>
+		
+	</main>
+
+</body>
+</html>

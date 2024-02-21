@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<div class="modal fade" id="modalDialog" th:attr="data-error=${error}" th:fragment="accountEditByAdminDialog">
+		<div class="modal-dialog">
+			<form th:action="@{/admin/account}" method="post" class="modal-content" th:object="${form}">
+				<div class="modal-header">Account Edit By Admin</div>
+				<div class="modal-body">
+					
+					<input type="hidden" th:field="*{id}" />
+					<div class="mb-3">
+							<label class="form-label">Name</label>
+							<input th:field="*{name}" type="text" disabled="disabled" class="form-control" />
+					</div>
+					
+					<div class="row mb-3">
+						<div class="col">
+							<label  class="form-label">Email</label>
+							<input th:field="*{email}" type="text" disabled="disabled" class="form-control"/>
+						</div>
+						<div class="col">
+							<label class="form-label">Phone</label>
+							<input th:field="*{phone}" type="text" disabled="disabled" class="form-control"/>
+						</div>
+					</div>
+					
+					<div class="mb-3">
+						<label  class="form-label">Authority</label>
+						<select th:field="*{authority}" class="form-select">
+							<option th:each="a : ${authorities}" th:value="${a}" th:text="${a}"></option>
+						</select>
+						<span class="errorTag text-danger" th:errors="*{authority}"></span>
+					</div>
+					
+					<div class="row mb-3">
+						<div class="col">
+							<label for="" class="form-label">Balance</label>
+							<input th:field="*{balance}" type="number"  class="form-control"/>
+						<span class="errorTag text-danger" th:errors="*{balance}"></span>
+						</div>
+						<div class="col">
+							<label for="" class="form-label">Point</label>
+							<input th:field="*{point}" type="number" class="form-control" />
+						<span class="errorTag text-danger" th:errors="*{point}"></span>
+						</div>
+					</div>
+
+					<div class="row mb-3">
+						<div class="col">
+							<label for="" class="form-label">Status</label>
+							<select th:field="*{active}" class="form-select">
+								<option value="true">Active</option>
+								<option value="false">UnActive</option>
+							</select>
+						</div>
+						<div class="col">
+							<label for="" class="form-label">Lock</label>
+							<select th:field="*{locked}" class="form-select">
+								<option value="true">Lock</option>
+								<option value="false">UnLock</option>
+							</select>
+						</div>
+					</div>
+					
+					<div class="mb-3">
+						<label>Status Message</label>
+						<textarea th:field="*{statusMessage}" class="form-control" rows="3" cols="30"></textarea>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-success">Update</button>
+					<button id="closeBtn" type="button" class="btn btn-danger"><span class="bi-x"></span> Close</button>
+				</div>
+			</form>
+		</div>
+		
+		<script type="text/javascript" th:src="@{/resources/myJs/account-edit-by-admin-modal-dialog.js}"></script>
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<div th:fragment="bookDetailsModalDialog(bookDetails, buyPage)" class="modal fade" th:if="${bookDetails} != null" id="bookDetailsModalDialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">Details of [[${bookDetails.name}]]</div>
+				<div class="modal-body">
+					<div class="mb-3">
+						<h5 class="d-inline-block">Name : </h5>
+						<span>[[${bookDetails.name}]]</span>
+					</div>
+					<div class="mb-3">
+						<h5 class="d-inline-block">Author : </h5>
+						<span>[[${bookDetails.author}]]</span>
+					</div>
+					<div class="mb-3">
+						<h5 class="d-inline-block">Price : </h5>
+						<span>[[${buyPage ? bookDetails.dtsPrice : bookDetails.bpdPrice}]]</span>
+					</div>
+					<div class="mb-3">
+						<h5 class="d-inline-block">Available Stock : </h5>
+						<span>[[${buyPage ? bookDetails.qtyForSale : bookDetails.qtyForBorrow}]]</span>
+					</div>
+					<div class="mb-3">
+						<h5 class="d-inline-block">Status : </h5>
+						<span>[[${bookDetails.active ? 'Available' : 'Not Available'}]]</span>
+					</div>
+					<div class="mb-3">
+						<h5 class="d-inline-block">Category : </h5>
+						<span>[[${bookDetails.category}]]</span>
+					</div>
+					<div sec:authorize="hasAnyAuthority('MEMBER', 'ADMIN')">
+						<div class="mb-3">
+							<h5 class="d-inline-block">Create At : </h5>
+							<span>[[${@myDateTimeFormatter.format(bookDetails.createAt)}]]</span>
+						</div>
+						<div class="mb-3">
+							<h5 class="d-inline-block">Update At : </h5>
+							<span>[[${@myDateTimeFormatter.format(bookDetails.updateAt)}]]</span>
+						</div>
+				
+						<div class="mb-3">
+							<h5 class="d-inline-block">Create By : </h5>
+							<span>[[${bookDetails.createBy}]]</span>
+						</div>
+						<div class="mb-3">
+							<h5 class="d-inline-block">Update By : </h5>
+							<span>[[${bookDetails.updateBy}]]</span>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="closeBtn" class="btn btn-outline-danger">Close</button>
+				</div>
+			</div>
+		</div>
+		
+		<script type="text/javascript" th:src="@{/resources/myJs/book-details-modal-dialog.js}"></script>
+	</div>
+
+</body>
+</html>

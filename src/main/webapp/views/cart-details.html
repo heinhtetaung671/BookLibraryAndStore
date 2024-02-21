@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: mainLayout(title = 'Cart | Details', main = ~{:: main})}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<main>
+		<h4>Cart Details</h4>
+		
+		<h5 class="my-3">Your Balance  :  [[${balance}]]</h5>
+		
+		<div th:replace="~{fragments/components :: message(${message}, ${status})}"></div>
+		
+		<div class="mt-3">
+			<!--  Link for promotion select controller -->
+			<a  th:href="@{/customer/cart/promotionSelect}" id="promotionSelectLink" class="d-none"></a>
+		
+			<div th:replace="~{fragments/components :: emptyMessage(${list}, 'Data')}"></div>
+			
+			<table th:if="${list.size() > 0}" class="table table-striped-columns">
+				<thead>
+					<tr>
+						<th>No</th>
+						<th>Book Name</th>
+						<th>Category</th>
+						<th class="text-center">Quantity</th>
+						<th>Price</th>
+						<th>Discount</th>
+					</tr>
+				</thead>
+				<tbody>
+					
+					<tr th:each="cartDetails, i : ${list}" th:object="${cartDetails}">
+						<td th:text="${i.index + 1}">1</td>
+						<td th:text="*{error ? errorMessage : bookName}" th:classappend="*{error ? 'text-danger' : ''}">Some Book</td>
+						<td th:text="*{categoryName}">Some Category</td>
+						<td class="text-center" >
+							<a th:unless="*{error}" th:href="@{|/customer/cart/*{bookId}/countDown|}" class="btn btn-danger"> - <i class="bi-cart-dash"></i> </a>
+							 [[*{error ? '-' : qty}]]
+							<a th:unless="*{error}" th:href="@{|/customer/cart/*{bookId}/countUp|}" class="btn btn-success"> <i class="bi-cart-plus"></i> + </a>
+						 </td>
+						<td th:text="*{error ? '-' : disPercent == 0 ? qty * dtsPrice : (qty * dtsPrice) - (((qty * dtsPrice) * disPercent) / 100)}">22342</td>
+						<td>
+							<select th:attr="data-id = *{bookId}" name="promotionId" class="form-select promotionSelectBox" style="width: 130px;">
+								<option value="0">None</option>
+								<option th:each="p : *{availablePromotions}" th:selected="*{promotionId} == ${p.id}" th:value="${p.id}" th:text="${p.name}"></option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="4">Total Balance</td>
+						<td th:text="${totalPrice}"></td>
+					</tr>
+					<tr>
+						<td>
+							<button th:if="${#bools.isFalse(errorList)}" disabled="disabled" class="btn btn-success"><i class="bi-cash-coin"></i> Check out </button>
+							<a th:href="@{/customer/sale/checkout}" th:unless="${#bools.isFalse(errorList)}" class="btn btn-success"><i class="bi-cash-coin"></i> Check out </a>
+						</td>
+					</tr>
+					
+				</tbody>
+			</table>
+		</div>
+		
+		<script type="text/javascript" th:src="@{/resources/myJs/cart-details-promotion-select.js}"></script>
+	</main>
+
+</body>
+</html>

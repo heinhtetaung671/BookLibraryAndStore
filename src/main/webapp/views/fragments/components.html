@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<!-- Empty Message  -->
+	<div th:fragment="emptyMessage(list, message)" class="alert alert-info text-center my-2" th:unless="${list.size() > 0 }"> 
+		There is no <span th:text="${message}">data</span> available!
+	</div>
+
+	<!--  Pagination -->
+	<div class="row" th:if="${pagination.pageList.size() > 1}" th:fragment="pagination(pagination)" id="pagination">
+		<div class="col-auto">
+			<select name="pageSizeSelect" id="pageSizeSelect" class="form-select">
+			<option th:selected="${pagination.pageSize == 10}" value="10">10</option>
+			<option th:selected="${pagination.pageSize == 25}" value="25">25</option>
+			<option th:selected="${pagination.pageSize == 50}" value="50">50</option>
+		</select>
+		</div>
+		<button type="button" id="firstBtn" th:attr="data-value=0" class="btn btn-outline-primary" style="width: 5rem;">First</button>
+		<button th:each="page : ${pagination.pageList}" th:attr="data-value=${page - 1}" type="button" id="pageBtn" class="btn" th:classappend="${page == pagination.currentPage ? 'btn-primary' : 'btn-outline-primary'}" style="width: 3rem;">[[${page}]]</button>
+		<button type="button" id="lastBtn" th:attr="data-value=${pagination.totalPage - 1}" class="btn btn-outline-primary" style="width: 5rem;">Last</button>
+		
+		<script type="text/javascript" th:src="@{/resources/myJs/pagination.js}"></script>
+	</div>
+
+	<!--  Active Select -->
+	<div th:fragment="activeSelect">
+		<select  name="active" id="activeSelect" class="form-select">
+			<option value="">All Status</option>
+			<option th:selected="${#strings.equals(param.active, 'true')}" value="true">Available</option>
+			<option th:selected="${#strings.equals(param.active, 'false')}" value="false">Not Available</option>
+		</select>
+
+		<script type="text/javascript" th:src="@{/resources/myJs/activeSelect.js}"></script>
+	</div>
+	
+	<!--  Sort by -->
+	<div th:fragment="sortBySelect(bookStore)" >
+		<select name="sortBySelect" id="sortBySelect" class="form-select">
+			<option th:selected="${#strings.equals(param.sortBy, 'name')}" value="name">Name</option>
+			<option th:selected="${#strings.equals(param.sortBy, 'author')}" value="author">Author</option>
+			<option th:selected="${#strings.equals(param.sortBy, 'dtsPrice') || #strings.equals(param.sortBy, 'bpdPrice')}" th:value="${bookStore ? 'dtsPrice' : 'bpdPrice'}">Price</option>
+			<option th:selected="${#strings.equals(param.sortBy, 'qtyForSale') || #strings.equals(param.sortBy, 'qtyForBorrow')}" th:value="${bookStore ? 'qtyForSale' : 'qtyForBorrow'}">Quantity</option>
+		</select>
+
+		<script type="text/javascript" th:src="@{/resources/myJs/sortBy.js}"></script>
+	</div>	
+	
+	<!--  Direction Button -->
+	<div th:fragment="direction">
+		<button id="directionBtn" th:text="${#strings.equals(param.direction, 'desc') ? 'change to Ascending'  : 'change to Descending'}" class="btn btn-outline-primary" type="button"></button>		
+		
+		<script type="text/javascript" th:src="@{/resources/myJs/sort-direction.js}"></script>
+	</div>
+	
+	<!--  SortBy Book For Member -->
+	<div th:fragment="sortBySelectBookForMember">
+		<select name="sortBySelect" id="sortBySelect" class="form-select">
+			<option th:selected="${#strings.equals(param.sortBy, 'id')}" value="id">Id</option>
+			<option th:selected="${#strings.equals(param.sortBy, 'name')}" value="name">Name</option>
+			<option th:selected="${#strings.equals(param.sortBy, 'author')}" value="author">Author</option>
+			<option th:selected="${#strings.equals(param.sortBy, 'wsPrice')}" value="wsPrice">wsPrice</option>
+			<option th:selected="${#strings.equals(param.sortBy, 'dtsPrice')}" value="dtsPrice">dtsPrice</option>
+			<option th:selected="${#strings.equals(param.sortBy, 'bpdPrice')}" value="bpdPrice">bpdPrice</option>
+			<option th:selected="${#strings.equals(param.sortBy, 'qtyForSale')}" value="qtyForSale">qtyForSale</option>
+			<option th:selected="${#strings.equals(param.sortBy, 'qtyForBorrow')}" value="qtyForBorrow">qtyForBorrow</option>
+		</select>
+
+		<script type="text/javascript" th:src="@{/resources/myJs/sortBy.js}"></script>
+	</div>
+	
+	
+	<!--   Message -->
+	<div th:unless="${#strings.isEmpty(message)  && #strings.isEmpty(status)}" th:fragment="message(message, status)" th:classappend="${#strings.equals(status, 'error') ? 'alert-danger' : 'alert-success'}" class="alert my-2">[[${message}]]</div>
+
+	
+
+</body>
+</html>

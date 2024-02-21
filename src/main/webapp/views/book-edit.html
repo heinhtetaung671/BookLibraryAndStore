@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: mainLayout(title = ${book.id == 0 ? 'Book | Add' : 'Book | Update'}, main = ~{::main})}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<main>
+		<div class="mx-auto" style="width: 900px;">
+			<h3>[[${book.id == 0 ? 'Add New Book' : 'Update Book'}]]</h3>
+			
+			<form th:action="@{/member/book/edit}" method="post" th:object="${book}" class="mt-4">
+				<input type="hidden" th:field="*{id}" />
+				
+				<div class="row mb-4">
+					<div class="col">
+						<label for="name" class="form-label">Name</label>
+						<input th:field="*{name}" type="text" class="form-control" placeholder="Enter book name..."/>
+						<span th:errors="*{name}" class="text-danger"></span>
+					</div>
+					
+					<div class="col">
+						<label for="author" class="form-label">Author</label>
+						<input th:field="*{author}" type="text" class="form-control" placeholder="Enter author name..."/>
+						<span th:errors="*{author}" class="text-danger"></span>
+					</div>
+	
+					<div class="col">
+						<label for="category" class="form-label">Category</label>
+						<select th:field="*{category}" class="form-select">
+							<option value="">Select one Category</option>
+							<option th:each="c : ${categories}"  th:text="${c.name}" th:value="${c.id}" ></option>
+						</select>
+						<span th:errors="*{category}" class="text-danger"></span>
+					</div>
+				</div>
+	
+				<div class="row mb-4">
+					<div class="col">
+						<label for="wsPrice" class="form-label">Whole Sale Price</label>
+						<input th:field="*{wsPrice}" type="number" class="form-control" />
+					</div>
+					
+					<div class="col">
+						<label for="dtsPrice" class="form-label">Details Sale Price</label>
+						<input th:field="*{dtsPrice}" type="number" class="form-control" />
+					</div>
+	
+					<div class="col">
+						<label for="bpdPrice" class="form-label">One Day Borrow Price</label>
+						<input th:field="*{bpdPrice}" type="number" class="form-control" />
+					</div>
+				</div>
+				
+				<div class="row mb-4">
+					<div class="col">
+						<label for="qtyForSale" class="form-label">Available Book to Sale</label>
+						<input th:field="*{qtyForSale}" type="number" class="form-control" />
+					</div>
+					
+					<div class="col">
+						<label for="qtyForBorrow" class="form-label">Available Book to Borrow</label>
+						<input th:field="*{qtyForBorrow}" type="number" class="form-control" />
+					</div>
+	
+					<div class="col d-flex align-items-center">
+		     			<div>
+							<input th:field="*{active}" type="checkbox" class="form-check-input" />
+							<label for="active1" class="form-check-label">This item is Available.</label></div>
+					</div>
+				</div>
+				
+				<div class="mb-4">
+					<div th:each="p : ${promotions}" class="form-check d-inline-block">
+						<input th:checked="${#lists.contains(currentBookPromotionIds, p.id)}" type="checkbox" name="promotions" th:value="${p.id}" th:id="${p.name}" class="form-check-input" />
+						<label th:for="${p.name}" th:text="${p.name}" class="form-check-label"></label>
+					</div>
+				</div>
+				
+				<div class="mb-3">
+					<button type="submit" class="btn btn-outline-success">Save</button>
+				</div>
+			</form>
+		</div>
+	</main>
+
+</body>
+</html>

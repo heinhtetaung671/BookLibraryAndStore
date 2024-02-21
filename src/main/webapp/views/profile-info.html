@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: mainLayout(title = 'Profile', main = ~{::main})}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<main>
+		<div class="row">
+			<div class="col-3">
+				<h4>Profile Info</h4>
+			
+				<div class="alert alert-warning" th:if="${profile.locked}">[[${profile.statusMessage}]]</div>
+				
+				<div class="card" th:object="${profile}">
+					<img th:src="@{*{profileImage} == null ? '/publicImg/defaultImg.jpg' : |/profileImg/*{profileImage}|}" class="card-img-top img-profile" alt="" />
+					<div class="card-header"></div>
+					<div class="card-body" th:object="${profile}">
+						<h5 class="card-title" th:text="'Name : ' + *{name}"></h5>
+					</div>
+					<ul class="list-group ">
+						<li class="list-group-item">Email 	: [[*{email}]]</li>
+						<li class="list-group-item">Phone 	: [[*{phone}]]</li>
+						<li class="list-group-item">Balance : [[*{balance}]]</li>
+						<li class="list-group-item">Point 	: [[*{point}]]</li>
+						<li class="list-group-item">Lock    : [[*{locked ? 'Locked' : '-'}]]</li>
+					</ul>
+
+					<div th:if="*{#authentication.name == email}" class="card-footer text-start">
+							<button id="chgPassBtn" class="btn btn-danger"><i class="bi-pencil"></i> Change Password</button>
+					</div>
+					<div class="card-footer text-end">
+							<button th:if="*{#authentication.name == email}" id="profilePhotoBtn" type="button" class="btn btn-dark me-2" th:text="*{profileImage == null ? 'Upload Profile Photo' : 'Change Profile Image'}"></button>
+							<button th:if="*{#authentication.name == email}" id="editProfileBtn" class="btn btn-warning"><i class="bi-pencil"></i> Edit Profile</button>
+					</div>
+					
+				</div>
+			</div>
+			
+			<div class="col">
+			
+				<h4>Bought History</h4>
+			
+				<h6 class="my-3">Total : [[${saleList.size()}]]</h6>		
+			
+				<div th:replace="~{fragments/components :: emptyMessage(${saleList}, 'History')}"></div>
+			
+				<table th:if="${saleList.size() > 0}" class="table table.striped-columns">
+					<thead>
+						<tr>
+							<th>No</th>
+							<th>Voucher No</th>
+							<th>Bought Time</th>
+							<th>Total Price</th>
+							<th>Point Gain</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="dto, i : ${saleList}" th:object="${dto}">
+							<td th:text="${i.index + 1}"></td>
+							<td th:text="*{id}"></td>
+							<td th:text="*{@myDateTimeFormatter.format(createAt)}"></td>
+							<td th:text="*{totalPrice}"></td>
+							<td th:text="*{point}"></td>
+							<td>
+								<a th:href="@{|/sale/details/*{id}|}" class="btn btn-outline-success"><i class="bi bi-info-circle"></i> Details</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div th:replace="~{fragments/components :: pagination(${pagination})}"></div>
+			</div>
+		</div>
+		
+		<form id="searchForm" th:action="@{/profile}" class="d-none" th:object="${pagination}">
+			<input name="page" type="number" id="page" value="0"  />
+			<input th:field="*{pageSize}" type="number" />
+		</form>
+		
+		<!-- Profle Edit Modal -->
+		<div th:if="${#authentication.name == profile.email}" id="profileModal" class="modal fade" th:attr="data-error=${error}, data-passworderror=${passwordError}">
+			<div class="modal-dialog">
+				<form th:action="@{/profile/edit}" method="post" th:object="${form}" class="modal-content">
+					<div class="modal-header">Profile Edit Form</div>
+					
+					<div class="modal-body">
+						<div class="mb-4">
+							<label class="form-label">Name</label>
+							<input th:field="*{name}" type="text" class="form-control" placeholder="Enter Name..."/>
+							<span class="text-danger" th:errors="*{name}"></span>
+						</div>
+
+						<div class="mb-4">
+							<label class="form-label">Phone</label>
+							<input th:field="*{phone}" type="tel" class="form-control" placeholder="Enter Phone..."/>
+						</div>
+
+						<div class="mb-4">
+							<label class="form-label">Email</label>
+							<input th:field="*{email}" type="email" class="form-control" placeholder="Enter Email..."/>
+							<span class="text-danger" th:errors="*{email}"></span>
+						</div>
+					</div>
+										
+					
+					<div class="modal-footer">
+						<button id="saveBtn" type="button" class="btn btn-success">Save</button>
+						<button id="closeBtn" type="button" class="btn btn-danger"><i class="bi-x"></i> Close</button>
+					</div>
+					
+					<!--  Confirm Password Modal -->
+					<div id="passwordModal" class="modal fade">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">Enter Passsword</div>
+									<div class="modal-body">
+										<label class="form-label">Password</label>
+										<input name="password" type="password" class="form-control" placeholder="Enter Password To Continue..." />
+										<span class="text-danger" th:if="${passwordErrorMsg != null}" th:text="${passwordErrorMsg}"></span>
+									</div>
+									<div class="modal-footer">
+										<button id="saveBtnInPassword" type="submit" class="btn btn-success">Save</button>
+										<button id="closePassBtn" type="button" class="btn btn-danger"><i class="bi-x"></i> Close</button>
+									</div>
+							</div>
+						</div>
+					</div>
+					
+				</form>
+			</div>
+		</div>
+		
+		<!--  Change Password Modal -->
+		<div th:if="${#authentication.name == profile.email}" id="chgPassModal" th:attr="data-chgpasserror=${chgPassError}" class="modal fade">
+			<div class="modal-dialog">
+				<form th:action="@{/profile/chg/pass}" method="post" class="modal-content" th:object="${chgPassForm}">
+					<div class="modal-header">Change Password</div>
+					<div class="modal-body">
+						<div class="mb-4">
+							<label class="form-label">Old Password</label>
+							<input th:field="*{oldPassword}" type="password" class="form-control"  placeholder="Enter Old Password..." />
+							<span class="text-danger" th:errors="*{oldPassword}"></span>
+						</div>
+	
+						<div class="mb-4">
+							<label class="form-label">New Password</label>
+							<input th:field="*{newPassword}" type="password" class="form-control" placeholder="Enter New Password..." />
+							<span class="text-danger" th:errors="*{newPassword}"></span>
+						</div>
+	
+						<div class="mb-4">
+							<label class="form-label">Confirm Password</label>
+							<input th:field="*{confirmPassword}" type="password" class="form-control" placeholder="Enter Confirm Password..."/>
+							<span class="text-danger" th:errors="*{confirmPassword}"></span>
+						</div>
+					</div>	
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-success">Save</button>
+						<button id="chgPassCloseBtn" type="button" class="btn btn-danger">Close</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		
+		<form th:action="@{/profile/photo/edit}" method="post" class="d-none" enctype="multipart/form-data" id="profilePhotoForm">
+			<input type="file" name="profileImg" id="profilePhotoInput" />
+		</form>
+		
+		<script type="text/javascript" th:src="@{/resources/myJs/pagination.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/myJs/chg-pass-modal.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/myJs/profile-edit.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/myJs/profile-image-edit.js}"></script>
+	</main>
+
+</body>
+</html>

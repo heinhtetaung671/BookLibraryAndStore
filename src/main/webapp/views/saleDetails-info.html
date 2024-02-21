@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{fragments/layout :: mainLayout(title = 'SaleDetails | Info', main = ~{::main})}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<main>
+
+		<h4>Voucher Details</h4>
+
+		<div class="mt-4 card w-75 mb-3">
+			<div class="card-header mb-3">Voucher Id : [[${saleId}]]</div>
+			<div class="card-body">
+				<div class="card-title">Total Cost :  [[${totalPrice}]]</div>
+				<table class="table">
+					<thead>
+						<tr>
+							<th>No.</th>
+							<th>Book Name</th>
+							<th>Author</th>
+							<th>Category</th>
+							<th>Quantity</th>
+							<th>Total Price</th>
+							<th>Discount Name</th>
+							<th>Discount Percent</th>
+							<th>Discount Type</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="dto, i : ${list}" th:object="${dto}">
+							<td th:text="${i.index + 1}"></td>
+							<td th:text="*{bookName}"></td>	
+							<td th:text="*{author}"></td>
+							<td th:text="*{categoryName}"></td>
+							<td th:text="*{qty}"></td>
+							<td th:text="*{promotionName == null ? qty * price : (qty * price) - ( ( (qty * price) * disPercent) / 100)}"></td>
+							<td th:text="*{promotionName == null ? '-' : promotionName}"></td>
+							<td th:text="*{disPercent  == null ? '-' : disPercent + '%'} "></td>
+							<td th:text="*{promotionType  == null ? '-' : promotionType}"></td>
+						</tr>
+						<tr>
+							<td colspan="5">Total Price</td>
+							<td th:text="${totalPrice}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+	</main>
+
+</body>
+</html>

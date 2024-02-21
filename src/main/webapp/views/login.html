@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{fragments/layout :: mainLayout(title = 'Login', main = ~{:: main})}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<main>
+		<div class=" mt-5">
+			<form th:action="@{/login}"
+				class="p-5 rounded border border-3 mx-auto w-50" method="post">
+
+				<div class="mx-auto w-50">
+					<h3 class="mb-4">Please Login</h3>
+					<div class="my-3 alert alert-danger" th:if="${param.error}"
+						th:text="${param.errorMsg}"></div>
+					<div class="mb-4">
+						<label class="form-label">Username</label> <input name="username"
+							type="text" class="form-control" placeholder="Enter Username..." />
+					</div>
+
+					<div class=" mb-4">
+						<label class="form-label">Password</label> <input name="password"
+							type="password" class="form-control"
+							placeholder="Enter Password..." />
+					</div>
+				</div>
+
+				<div class="my-5 mx-auto w-25">
+					<div class="row mb-2">
+						<button type="submit" class="btn btn-success">Login</button>
+					</div>
+					<div class="row ">
+						<a th:href="@{/signUp}" class="btn btn-secondary ">SignUp</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</main>
+
+</body>
+</html>

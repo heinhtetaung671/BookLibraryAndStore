@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<div id="modalDialog" th:attr="data-error=${error}" class="modal fade" th:fragment="promotionEditModal">
+		<div class="modal-dialog">
+			<form class="modal-content" th:action="@{/member/promotion/edit}" method="post" th:object="${form}">
+				
+				<div class="modal-header">
+					<h4>Promotion Edit</h4>
+				</div>
+				
+				<div class="modal-body">
+					<input th:field="*{id}" type="hidden" />
+					
+					<div class="mb-3">
+						<label for="name" class="from-label">Name</label>
+						<input th:field="*{name}" type="text" class="form-control" placeholder="Enter Name..."/>
+						<span th:errors="*{name}" class="text-danger"></span>
+					</div>
+					
+					<div class="mb-3">
+						<label for="type" class="form-label">Type</label>
+						<select th:field="*{type}" id="type" class="form-select">
+							<option value="">Select Type</option>
+							<option th:each="t : ${types}" th:text="${t}" th:value="${t}"></option>
+						</select>
+							<span th:errors="*{type}" class="text-danger"></span>
+					</div>
+					
+					<div class="mb-3">
+						<label for="disPercent" class="form-label">Discount Percent</label>
+						<input th:field="*{disPercent}" type="number" class="form-control" />
+						<span th:errors="*{disPercent}" class="text-danger"></span>
+					</div>
+					
+					<div class="mb-3">
+						<label for="active">Status</label>
+						<select th:field="*{active}" class="form-select">
+							<option value="true">Available</option>
+							<option value="false">Not Available</option>
+						</select>
+						<span th:errors="*{active}" class="text-danger"></span>
+					</div>
+				</div>
+						
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-success">Save</button>
+					<button id="closeBtn" type="button" class="btn btn-danger">Close</button>
+				</div>				
+			</form>
+			
+		</div>
+		
+		<script type="text/javascript" th:src="@{/resources/myJs/promotion-modal-dialog.js}"></script>
+	</div>
+
+</body>
+</html>

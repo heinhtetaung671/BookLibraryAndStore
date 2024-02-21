@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<nav th:fragment="navBar" class="navbar navbar-expand bg-primary navbar-dark">
+		<div class="container-fluid">
+			<a href="#" class="navbar-brand">BookLibraryAndStore</a>
+		
+			<ul class="navbar-nav">
+				<li sec:authorize="!isAnonymous() && !hasAuthority('ADMIN')" th:if="${@cartContainer.cart.size() > 0}"  class="nav-item">
+					<a th:href="@{/customer/cart/details}" class="btn btn-primary position-relative ">
+						<i class="bi-cart3"></i> Cart
+					  <span class="position-absolute  start-100 translate-middle badge rounded-pill bg-dark">
+					    	[[${@cartContainer.cart.size()}]]
+					  </span>
+					</a>
+				</li>
+				
+				<li sec:authorize="!isAnonymous()" class="nav-item">
+					<a th:href="@{/profile}" class="nav-link"><i class="bi-person-lines-fill"></i> Profile</a>
+				</li>
+				<li sec:authorize="hasAnyAuthority('CUSTOMER', 'MEMBER')" class="nav-item">
+					<a th:href="@{/customer/borrowed}" class="nav-link">Borrowed Book</a>
+				</li>
+				<li sec:authorize="hasAnyAuthority('CUSTOMER', 'MEMBER')" class="nav-item">
+					<a th:href="@{/customer/borrowing}" class="nav-link">Borrowing Book</a>
+				</li>
+				<li class="nav-item">
+					<a th:href="@{/public/book/borrow}" class="nav-link"><i class="bi-collection"></i> Book Library</a>
+				</li>
+				<li class="nav-item">
+					<a th:href="@{/public/book/buy}" class="nav-link"><i class="bi-cart"></i> Book Store</a>
+				</li>
+				<li sec:authorize="hasAnyAuthority('MEMBER', 'ADMIN')" class="nav-item">
+					<a th:href="@{/member/book}" class="nav-link"><i class="bi-journals"></i> Books</a>			
+				</li>
+				<li sec:authorize="hasAnyAuthority('MEMBER', 'ADMIN')" class="nav-item">
+					<a th:href="@{/member/category}" class="nav-link"><i class="bi-tags"></i> Categories</a>
+				</li>
+				<li sec:authorize="hasAnyAuthority('MEMBER', 'ADMIN')" class="nav-item">
+					<a th:href="@{/member/promotion}" class="nav-link"><i class="bi-percent"></i> Promotion</a>
+				</li>
+				<li sec:authorize="hasAuthority('ADMIN')" class="nav-item">
+					<a th:href="@{/admin/account}" class="nav-link"><i class="bi-person-gear"></i> Account</a>
+				</li>
+				<li sec:authorize="isAuthenticated()" class="nav-item">
+					<button id="logoutBtn" class="nav-link" type="button" ><i class="bi-box-arrow-in-left"></i> Logout</button>
+				</li>
+				<li sec:authorize="isAnonymous()" class="nav-item">
+					<a th:href="@{/signUp}" class="nav-link"><i class="bi bi-box-arrow-in-right"></i> SignUp</a>
+				</li>
+			</ul>
+			
+		</div>
+		
+		<form id="logoutForm" th:action="@{/logout}" class="d-none" method="post">
+		</form>
+		
+		<script type="text/javascript" th:src="@{/resources/myJs/logout.js}"></script>
+	</nav>
+
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<div th:fragment="categoryDialog" th:attr="data-error=${error}" id="modalDialog" class="modal fade">
+		<div class="modal-dialog">
+			<form th:object="${form}"  th:action="@{/member/category}" method="post" class="modal-content">
+				<div class="modal-header">
+					<h3>Category Edit</h3>
+				</div>
+				<div class="modal-body">
+					<input type="hidden" th:field="*{id}"  />
+					<div class="mb-3">
+						<label for="name" class="form-label">Name</label>
+						<input th:field="*{name}" type="text" class="form-control" placeholder="Enter Category name..."/>
+						<span th:errors="*{name}"></span>
+					</div>
+					<div class="mb-3">
+						<label for="active" class="form-label">Status</label>
+						<select th:field="*{active}" class="form-select">
+							<option value="true">Available</option>
+							<option value="false">Not Available</option>
+						</select>
+					</div>	
+				</div>
+				<div class="modal-footer">
+					<button  class="btn btn-success" type="submit">Save</button>
+					<button id="closeBtn" class="btn btn-danger" type="button"><i class="bi-x"></i> Close</button>
+				</div>
+			</form>
+		</div>
+		
+		<script type="text/javascript" th:src="@{/resources/myJs/category-modal-dialog.js}"></script>
+	</div>
+
+</body>
+</html>

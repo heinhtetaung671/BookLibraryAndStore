@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: mainLayout(title = 'Account | List', main = ~{::main})}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<main>
+		<h4>Account List</h4>
+		
+		<div class="row">
+			<div class="col">
+			
+			<div th:replace="~{fragments/components :: message(${message}, ${status})}"></div>
+			<div th:replace="~{fragments/components :: emptyMessage(${list}, 'Account')}"></div>
+			
+				<table th:if="${list.size() > 0}" class="table table-striped-columns">
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Name</th>
+							<th>Email</th>
+							<th>Phone</th>
+							<th>Authority</th>
+							<th>Balance</th>
+							<th>Point</th>
+							<th>Status</th>
+							<th>Locked</th>
+							<th>Status Message</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="dto : ${list}" th:object=${dto}>
+							<td th:text="*{id}"></td>
+							<td th:text="*{name}"></td>
+							<td th:text=*{email}></td>
+							<td th:text="*{phone}"></td>
+							<td th:text="*{authority}"></td>
+							<td th:text="*{balance}"></td>
+							<td th:text="*{point}"></td>
+							<td th:text="*{active ? 'Active' : 'Not Active'}"></td>
+							<td th:text="*{locked ? 'Locked' : '-'}"></td>
+							<td th:text="*{statusMessage}"></td>
+							<td>
+								<a th:href="@{/profile(accountId=*{id})}" class="btn btn-outline-success"><i class="bi-info-circle"></i> Details</a>
+								<button th:attr="data-id=*{id}, data-name=*{name}, data-email=*{email},
+								 data-phone=*{phone == null ? '' : phone}, data-authority=*{authority}, data-balance=*{balance},
+								  data-point=*{point}, data-active=*{active}, data-locked=*{locked}, data-statusmessage=*{statusMessage}" type="button" class="editBtn btn btn-outline-primary bi-pencil"></button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<div th:replace="~{fragments/components :: pagination(${pagination})}"></div>
+			</div>
+			<div class="col-3">
+				<div class="card">
+					<div class="card-header">Account Search</div>
+					<div class="card-body">
+						<form id="searchForm" th:action="@{/admin/account}" th:object="${searchForm}">
+							<div class="mb-3">
+								<label class="form-label">Name</label>
+								<input id="searchName" th:field="*{name}" type="text" class="form-control" placeholder="Enter name..." />
+							</div>
+
+							<div class="row mb-3">
+								<div class="col">
+									<label class="form-label">Email</label>
+									<input id="searchEmail" th:field="*{email}" type="text" class="form-control" placeholder="Enter email..."/>
+								</div>
+	
+								<div class="col">
+									<label class="form-label">Phone</label>
+									<input id="searchPhone" th:field="*{phone}" type="text" class="form-control" placeholder="Enter phone..."/>
+								</div>
+							</div>
+							
+							<div class="mb-3">
+								<label class="form-label">Authority</label>
+								<select th:field="*{authority}" id="searchAuthority" class="form-select">
+									<option value="">All Authority</option>
+									<option  th:each="a : ${authorities}" th:text="${a}" th:value="${a}"></option>
+								</select>
+							</div>
+
+							<div class="row mb-3" >
+								<div class="col">
+									<label class="form-label">Balance</label>
+									<input id="searchBalance" th:field="*{balance}" type="number" class="form-control" placeholder="Enter balance..." />
+								</div>
+								<div class="col">
+									<label class="form-label">Point</label>
+									<input id="searchPoint" th:field="*{point}" type="number" class="form-control" placeholder="Enter point..."/>
+								</div>
+							</div>
+							
+							<div class="row mb-3">
+								<div class="col">
+									<label class="form-label">Status</label>
+									<select id="searchStatus" th:field="*{active}" class="form-select">
+										<option value="">All Status</option>
+										<option value="true">Available</option>
+										<option value="false">Not Available</option>
+									</select>
+								</div>
+	
+								<div class="col">
+									<label class="form-label">Locked</label>
+									<select id="searchLocked" th:field="*{locked}" class="form-select">
+										<option value="">All Account</option>
+										<option value="true">Locked Account</option>
+										<option value="false">None Locked Account</option>
+									</select>
+								</div>
+							</div>
+							
+							<div class="mb-3 row">
+								<button type="submit" class="btn btn-outline-success mb-2" >Search</button>
+								<a th:href="@{/admin/addNewAccount}" class="btn btn-outline-danger">Add New Member</a>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div th:replace="~{fragments/account-edit-by-admin-modal ::  accountEditByAdminDialog}"></div>
+	</main>
+
+</body>
+</html>

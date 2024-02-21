@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: mainLayout(title = 'Borrow | Book', main = ~{:: main})}" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<main>
+		
+		<h3>Book Available List for Borrow</h3>
+		
+		<h6 class="my-3">Your Balance <i class="bi bi-coin"></i> : [[${balance}]]</h6>
+		
+		<div>
+			<form th:action="@{/public/book/borrow}" id="searchForm">
+				<input type="hidden" th:value="0" name="page" id="page" />
+				<input type="hidden" th:value="${param.sortBy}" name="sortBy" id="sortBy"/>
+				<input type="hidden" th:value="${param.pageSize}" name="pageSize" id="pageSize" />
+				<input type="hidden" th:value="${#strings.isEmpty(param.direction)? 'asc' : param.direction }"  name="direction" id="direction" />
+				<div class="row align-items-center my-3">
+					<div class="col-auto">
+						<label class="col-form-label">Search Bar</label>
+					</div>
+					<div class="col-3">				
+						<input th:value="${param.keyword}" type="text" name="keyword" class="form-control" placeholder="Enter a keyword..." />
+					</div>				
+					<div class="col-auto">
+						<label for="active" class="col-form-label">Status</label>
+					</div>
+					<div class="col-auto">
+						<div th:replace="~{fragments/components :: activeSelect}"></div>
+					</div>
+					<div class="col-auto">
+						<button type="submit" class="btn btn-outline-success">Search</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		
+		<hr />
+		
+		<div th:replace="~{fragments/components :: message(${borrowBookMessage}, ${status})}"></div>
+		<div th:replace="~{fragments/components :: emptyMessage(${list}, 'Book')}"></div>
+		
+		<div th:if="${list.size() >0}" class="row">
+			<div class="col-auto">
+				<label class="col-form-label">Sort By : </label>
+			</div>
+			<div class="col-auto">
+				<div  th:replace="~{fragments/components :: sortBySelect(false)}"></div>
+			</div>
+			<div class="col-auto">
+				<div th:replace="~{fragments/components :: direction}"></div>		
+			</div>
+		</div>
+		
+		<table th:if="${list.size() >0}" class="table table-striped">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Author</th>
+					<th>Quantity</th>
+					<th>Price per Day</th>
+					<th>Category</th>
+					<th>Status</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="dto : ${list}" th:object="${dto}">
+					<td th:text="*{name}">Effective Java</td>
+					<td th:text="*{author}">Unknown</td>
+					<td th:text="*{qtyForBorrow}">7</td>
+					<td th:text="*{bpdPrice}">500</td>
+					<td th:text="*{category}">Programming</td>
+					<td th:text="*{active ? 'Available' : 'Not Available'}"></td>
+					<td>
+						<button sec:authorize="!hasAuthority('ADMIN')" th:unless="*{active}" disabled="disabled" class="btn btn-outline-secondary">Borrow</button>
+						<a sec:authorize="!hasAuthority('ADMIN')" th:if="*{active}" th:href="@{|/public/book/borrow/*{id}|}" class="btn btn-outline-warning">Borrow</a>
+						<a th:href="@{|/public/book/borrow/*{id}/details|}" class="btn btn-outline-info">Details</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<div th:replace="~{fragments/book-details-modal :: bookDetailsModalDialog(${bookDetails}, false)}"></div>
+		<div th:replace="~{fragments/components :: pagination(${pagination})}"></div>		
+	</main>
+
+</body>
+</html>
