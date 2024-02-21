@@ -54,3 +54,5 @@ role management, accounts' balance and points management
 * customer (login email = customer@gmail.com, pass = customer)
 * member (login email = member@gmail.com, pass = member)
 * admin (login email = admin@gmail.com, pass = admin)
+
+But you have to have database named 'bookLibraryAndStore', username : 'root' and password : 'admin'
