@@ -49,3 +49,8 @@ Borrow a book for free.
 * Add new accounts, lock accounts, deactive accounts, give status message 
 role management, accounts' balance and points management
 * Admin can check all user accounts' specific profile and bought history
+
+### Once you run this project, 3 users will be automatically created.
+* customer (login email = customer@gmail.com, pass = customer)
+* member (login email = member@gmail.com, pass = member)
+* admin (login email = admin@gmail.com, pass = admin)
